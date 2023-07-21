@@ -33,15 +33,10 @@ async function getCollection(collectionName) {
 }
 
 //Obtener el mayor Código de la collection muebles y sumarle 1
-async function nextCod() {
-    const collection = await getCollection("muebles")
-    const collectionArray = await collection.find().toArray()
-    let maxCod = 0
-    collectionArray.forEach(item => {
-        if (item.codigo > maxCod) maxCod = item.codigo
-    })
+async function nextCod(collection) {
+    const maxIDDoc = await collection.find().sort({ codigo: -1 }).limit(1).toArray();
+    const maxCod = maxIDDoc[0]?.codigo ?? 0
     return maxCod + 1
 }
 
 module.exports = { getCollection, disconnect, nextCod }
-
